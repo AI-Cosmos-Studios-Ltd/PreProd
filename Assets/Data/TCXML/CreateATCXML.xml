@@ -1,0 +1,110 @@
+<TCXML version="1.0">
+    <!-- Project Definition -->
+    <Project id="GenerateTCXML" desc="Create a TCXML for a given task" author="LLM-AI" date="2023-04-15" />
+
+    <!-- Inputs -->
+    <Inputs>
+        <Input id="taskDescription" type="File" path="input/task_description.txt"/>
+    </Inputs>
+
+    <!-- Project Variables -->
+    <!-- Define any project-specific variables here if needed -->
+
+    <!-- Operations -->
+    <Operations>
+        <!-- Operation for understanding the task -->
+        <Operation id="UnderstandTask" type="TaskCompletion" desc="Analyze the task and extract key objectives.">
+            <Input id="taskDescription" type="File" path="input/task_description.txt"/>
+            <Output id="taskObjectives" path="analysis/objectives.txt"/>
+        </Operation>
+
+        <!-- Operation for breaking down the task -->
+        <Operation id="BreakDownTask" type="TaskCompletion" desc="Divide the task into manageable sub-tasks.">
+            <Input id="taskDescription" type="File" path="input/task_description.txt"/>
+            <Input id="taskObjectives" type="File" path="analysis/objectives.txt"/>
+            <Output id="subTasks" path="analysis/sub_tasks.txt"/>
+        </Operation>
+
+        <!-- Operation for identifying inputs -->
+        <Operation id="IdentifyInputs" type="TaskCompletion" desc="List necessary inputs for completing the task.">
+            <Input id="taskObjectives" type="File" path="analysis/objectives.txt"/>
+            <Input id="subTasks" type="File" path="analysis/sub_tasks.txt"/>
+            <Output id="requiredInputs" path="planning/required_inputs.txt"/>
+        </Operation>
+
+        <!-- Operation for setting variables -->
+        <Operation id="SetVariables" type="TaskCompletion" desc="Define and initialize control parameters.">
+            <Input id="subTasks" type="File" path="analysis/sub_tasks.txt"/>
+            <Input id="requiredInputs" type="File" path="planning/required_inputs.txt"/>
+            <Output id="controlParameters" path="planning/control_parameters.txt"/>
+        </Operation>
+
+        <!-- Operation for designing iterators -->
+        <Operation id="DesignIterators" type="TaskCompletion" desc="Create iterators for repetitive sub-tasks.">
+            <Input id="requiredInputs" type="File" path="planning/required_inputs.txt"/>
+            <Input id="controlParameters" type="File" path="planning/control_parameters.txt"/>
+            <Output id="iterators" path="planning/iterators.txt"/>
+        </Operation>
+
+        <!-- Operation for creating operations -->
+        <Operation id="CreateOperations" type="TaskCompletion" desc="Detail the operations necessary for the task workflow.">
+            <Input id="subTasks" type="File" path="analysis/sub_tasks.txt"/>
+            <Input id="iterators" type="File" path="planning/iterators.txt"/>
+            <Output id="detailedOperations" path="planning/detailed_operations.txt"/>
+        </Operation>
+
+        <!-- Operation for specifying inputs and outputs for each operation -->
+        <Operation id="SpecifyInOut" type="TaskCompletion" desc="Map inputs and outputs for each operation in the task.">
+            <Input id="controlParameters" type="File" path="planning/control_parameters.txt"/>
+            <Input id="detailedOperations" type="File" path="planning/detailed_operations.txt"/>
+            <Output id="mappedOperations" path="execution/mapped_operations.txt"/>
+        </Operation>
+
+        <!-- Operation for defining final output -->
+        <Operation id="DefineFinalOutput" type="TaskCompletion" desc="Describe the final output of the TCXML process.">
+            <Input id="mappedOperations" type="File" path="execution/mapped_operations.txt"/>
+            <Output id="finalOutputDefinition" path="execution/final_output_definition.txt"/>
+        </Operation>
+
+        <!-- Operation for considering project flow -->
+        <Operation id="ConsiderProjectFlow" type="TaskCompletion" desc="Plan the conditional logic and decision points in the workflow.">
+            <Input id="mappedOperations" type="File" path="execution/mapped_operations.txt"/>
+            <Input id="finalOutputDefinition" type="File" path="execution/final_output_definition.txt"/>
+            <Output id="projectFlow" path="execution/project_flow.txt"/>
+        </Operation>
+
+        <!-- Operation for reviewing for completeness and coherence -->
+        <Operation id="ReviewCoherence" type="TaskCompletion" desc="Ensure the TCXML reflects all components of the task and is coherent.">
+            <Input id="finalOutputDefinition" type="File" path="execution/final_output_definition.txt"/>
+            <Input id="projectFlow" type="File" path="execution/project_flow.txt"/>
+            <Output id="coherenceReview" path="validation/coherence_review.txt"/>
+        </Operation>
+
+        <!-- Operation for error handling and validation -->
+        <Operation id="ErrorHandling" type="TaskCompletion" desc="Define error handling and validation strategies.">
+            <Input id="projectFlow" type="File" path="execution/project_flow.txt"/>
+            <Input id="coherenceReview" type="File" path="validation/coherence_review.txt"/>
+            <Output id="errorStrategies" path="validation/error_handling.txt"/>
+        </Operation>
+
+        <!-- Operation for finalizing the TCXML -->
+        <Operation id="FinalizeTCXML" type="TaskCompletion" desc="Format and validate the TCXML against the schema.">
+            <Input id="coherenceReview" type="File" path="validation/coherence_review.txt"/>
+            <Input id="errorStrategies" type="File" path="validation/error_handling.txt"/>
+            <Output id="finalizedTCXML" path="output/finalized_tcxml.xml"/>
+        </Operation>
+
+        <!-- Operation for running a hypothetical execution -->
+        <Operation id="HypotheticalExecution" type="TaskCompletion" desc="Simulate a run of the TCXML to identify issues.">
+            <Input id="finalOutputDefinition" type="File" path="execution/final_output_definition.txt"/>
+            <Input id="projectFlow" type="File" path="execution/project_flow.txt"/>
+            <Input id="finalizedTCXML" type="File" path="output/finalized_tcxml.xml"/>
+            <Output id="executionSimulation" path="simulation/execution_simulation.txt"/>
+        </Operation>
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Outputs>
+        <Output id="completedTCXML" path="output/finalized_tcxml.xml"/>
+    </Outputs>
+</TCXML>

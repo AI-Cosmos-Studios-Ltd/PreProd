@@ -1,0 +1,60 @@
+<TCXML version="0.10.0">
+	<!-- Project Definition -->
+	<Project id="FictionProject" genre="Novel" author="gpt-4-1106-preview" date="2023-04-01" desc="Develop a novel with a compelling narrative arc."/>
+
+	<!-- Inputs -->
+	<Inputs>
+	  <Input id="story_requirements" file="story_requirements.txt"/>
+	  <!-- Additional inputs as necessary -->
+	</Inputs>
+
+	<!-- Project Variables -->
+	<Vars>
+	  <Var name="CharacterCount" type="integer" value="4"/>
+	  <Var name="SettingType" type="string" value="Mystery"/>
+	  <Var name="ChapterCount" type="integer" value="12"/>
+	  <!-- Additional variables as necessary -->
+	</Vars>
+
+	<!-- Operations -->
+	<Operations>
+	  <!-- Operation for concept development -->
+	  <Operation id="ConceptDevelopment" type="TaskCompletion" desc="Develop concepts for characters and setting based on provided requirements.">
+		<Iterator id="CharacterIterator" from="1" to="{{CharacterCount}}"/>
+		<Input id="story_requirements"/>
+		<Output id="character_{{CharacterIterator}}_concept" file="character_{{CharacterIterator}}_concept.xml"/>
+		<Output id="setting_concept" file="concept_setting.xml"/>
+	  </Operation>
+
+	  <!-- Operation for drafting chapters -->
+	  <Operation id="DraftChapter" type="TaskCompletion" desc="Generate draft for the chapter based on developed concepts.">
+		<Iterator id="CharacterIterator" from="1" to="{{CharacterCount}}"/>
+		<Iterator id="ChapterIterator" from="1" to="{{ChapterCount}}"/>
+		<Input id="story_requirements"/>
+		<Input id="character_{{CharacterIterator}}_concept"/>
+		<Input id="setting_concept"/>
+		<Output id="draft_chapter_{{ChapterIterator}}" file="draft_chapter_{{ChapterIterator}}.xml"/>
+	  </Operation>
+
+	  <!-- Operation for revising chapters -->
+	  <Operation id="ReviseChapter" type="TaskCompletion" desc="Revise and polish chapter drafts.">
+		<Iterator id="ChapterIterator" from="1" to="{{ChapterCount}}"/>
+		<Input id="draft_chapter_{{ChapterIterator}}"/>
+		<Output file="revised_chapter_{{ChapterIterator}}.xml"/>
+	  </Operation>
+
+	  <!-- Function Invocation for final compilation -->
+	  <Operation id="CompileNovel" type="Function" desc="Compile all revised chapters into a single novel document.">
+		<Iterator id="ChapterIterator" from="1" to="{{ChapterCount}}"/>
+		<Input id="revised_chapter_{{ChapterIterator}}"/>
+		<Output file="final_novel.xml"/>
+	  </Operation>
+	  
+	  <!-- Additional operations as necessary -->
+	</Operations>
+
+	<!-- Final Output Definition -->
+	<Outputs>
+	  <Output file="final_novel.xml"/>
+	</Outputs>
+</TCXML>

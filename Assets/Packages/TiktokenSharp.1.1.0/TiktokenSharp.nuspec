@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>TiktokenSharp</id>
+    <version>1.1.0</version>
+    <title>TiktokenSharp</title>
+    <authors>aiqinxuancai</authors>
+    <license type="file">LICENSE.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/aiqinxuancai/TiktokenSharp</projectUrl>
+    <description>This project implements token calculation for OpenAI's gpt-3.5-turbo model, specifically using `cl100k_base` encoding.</description>
+    <tags>chatgpt openai</tags>
+    <repository type="git" url="https://github.com/aiqinxuancai/TiktokenSharp" commit="572ef5572c8f12257d9bfbfaa317495314a44a13" />
+    <dependencies>
+      <group targetFramework="net7.0" />
+      <group targetFramework="net8.0" />
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="IndexRange" version="1.0.2" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.5.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.1" />
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- Project Element -->
+    <xs:element name="Project">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="desc" type="xs:string" use="required"/>
+            <xs:attribute name="genre" type="xs:string"/>
+            <xs:attribute name="author" type="xs:string"/>
+            <xs:attribute name="date" type="xs:date"/>
+        </xs:complexType>
+    </xs:element>
+    
+	<!-- Definition for InputType -->
+    <xs:simpleType name="InputType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Directory"/>
+            <xs:enumeration value="File"/>
+        </xs:restriction>
+    </xs:simpleType>
+	
+    <!-- Input Element -->
+    <xs:element name="Input">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="type" type="InputType" use="required"/>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Variable Element -->
+    <xs:element name="Var">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+	<!-- Iterator Range-->
+	<xs:simpleType name="IteratorRangeType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\{\{[A-Za-z_][A-Za-z0-9_]*\}\}|\d+"/> <!-- Matches {{Var name}} or digits -->
+		</xs:restriction>
+	</xs:simpleType>
+	
+    <!-- Iterator Element -->
+    <xs:element name="Iterator">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="from" type="IteratorRangeType" use="required"/>
+            <xs:attribute name="to" type="IteratorRangeType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+	<!-- Definition for OperationType -->
+    <xs:simpleType name="OperationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="TaskCompletion"/>
+            <xs:enumeration value="Function:CombineFiles"/>
+			<!-- Additional functions will be added as needed -->
+        </xs:restriction>
+    </xs:simpleType>
+	
+    <!-- Operation Element -->
+    <xs:element name="Operation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Iterator" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Input" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element ref="Output" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="OperationType" use="required"/>
+            <xs:attribute name="desc" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Output Element -->
+    <xs:element name="Output">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string"/>
+            <xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="path" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Root Element TCXML -->
+    <xs:element name="TCXML">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Project"/>
+                <xs:element name="Inputs">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Input" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Vars">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Var" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Operations">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Operation" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Outputs">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Output" minOccurs="1" maxOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>
