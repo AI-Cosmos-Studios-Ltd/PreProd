@@ -83,4 +83,6 @@ crashlytics-build.properties
 /[Aa]ssets/Packages/*/*/lib/
 /[Aa]ssets/Resources/OpenAIConfiguration.asset
 /[Aa]ssets/Resources/OpenAIConfiguration.asset.meta
+/[Aa]ssets/Resources/AnthropicConfiguration.asset
+/[Aa]ssets/Resources/AnthropicConfiguration.asset.meta
 

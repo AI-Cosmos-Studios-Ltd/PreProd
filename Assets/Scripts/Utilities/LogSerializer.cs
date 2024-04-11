@@ -228,17 +228,4 @@ public class LogSerializer : MonoSingleton<LogSerializer> {
         }
         logFileStream.Flush();
     }
-
-#if UNITY_EDITOR
-    [MenuItem("AI Cosmos/Open Persistant Data Folder")]
-    public static void OpenLogOutputFolder() {
-        Application.OpenURL(Application.persistentDataPath);
-    }
-
-    [MenuItem("AI Cosmos/Open Output Folder")]
-    public static void OpenOutputFolder() {
-        Application.OpenURL(Application.dataPath + "/../Output/");
-    }
-#endif
-
 }
