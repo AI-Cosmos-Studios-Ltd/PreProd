@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Utilities.WebRequestRest;
+using TiktokenSharp;
 
 /// <summary>
 /// This class aims to completely define a single Text-Completion operation.
@@ -28,8 +28,8 @@ public class TCOperation : IDebugInfo {
         OnRequestStarted?.Invoke(this);
     }
 
-    public void RequestIsComplete() {
-        RequestCompleted = DateTime.UtcNow;
+    public void RequestWasSent() {
+        RequestSent = DateTime.UtcNow;
         OnRequestComplete?.Invoke(this);
     }
 
@@ -41,7 +41,7 @@ public class TCOperation : IDebugInfo {
     /// Arbitrary ID for debugging.
     /// </summary>
     public Guid OperationGUID { get; private set; } = Guid.NewGuid();
-    public string OperationID => OperationGUID.ToString("N").Substring(0,6);
+    public string OperationID => OperationGUID.ToString("N").Substring(0,8).ToUpperInvariant().Insert(4,"-");
 
     // AI Cosmos Studios defines a Text-Completion operation as having the following inputs:
 
@@ -56,7 +56,7 @@ public class TCOperation : IDebugInfo {
     public List<string> Instructions { get; set; } = new List<string>();
 
     /// <summary>
-    /// (Optional) A series of system messages that contain the contextual information required for the operation.
+    /// (Optional) A series of system messages that contain the contextual information required/useful context for the operation.
     /// </summary>
     public List<string> Context { get; set; } = new List<string>();
 
@@ -75,7 +75,7 @@ public class TCOperation : IDebugInfo {
     /// If the inputs are not valid, the result string will contain a message describing the validation failures.
     /// </summary>
     public bool ValidateInputs(out string result) {
-        result = "";
+        result = string.Empty;
 
         if(string.IsNullOrEmpty(Role)) {
             result += "Role is required. ";
@@ -85,6 +85,7 @@ public class TCOperation : IDebugInfo {
             result += "Prompt is required. ";
         }
 
+        result = result.Trim();
         return result.Length == 0;
     }
 
@@ -117,18 +118,51 @@ public class TCOperation : IDebugInfo {
         // Add the prompt
         messages.Add(USER_KEY, Prompt);
 
+        // Cache the inputs as a json string
+        LastGeneratedInputJSON = MessagesToJson(messages);
+
         return messages;
     }
+
+    private string MessagesToJson(Dictionary<string, string> messages) {
+        if(messages == null || messages.Count == 0) {
+            return string.Empty;
+        }
+        // Start Json
+        StringBuilder sb = new StringBuilder("{");
+
+        // Add messages
+        foreach(var message in messages) {
+            sb.AppendLine($"\"{message.Key}\": \"{message.Value}\",");
+        }
+        // Remove trailing comma
+        sb.Remove(sb.Length - 1, 1);
+        
+        // End json
+        sb.Append("}");
+        return sb.ToString();
+    }
+
+    public string LastGeneratedInputJSON { get; private set; }
 
     #endregion
 
     #region CONFIG
 
-    // TODO: Change this to be a generic enum, make ITCProvider enforce the creation of a function to convert the enum to a concrete model.
-    public string Model = "claude-3-opus-20240229";
+    /// <summary>
+    /// Used to specifiy if there is a preference in which TCProvider completes this operation.
+    /// </summary>
+    public Type PreferredProvider = null;
 
-    // TODO: Figure out if we need to make this more generic. Check if Anthropic use a simmilar throttling system to OpenAI.
-    public int MaxTokens = 1024;
+    /// <summary>
+    /// ModelProfile contains the desired properties of the LLM model that will perform a TCOperation.
+    /// </summary>
+    public TCModelProfile ModelProfile = new TCModelProfile();
+
+    /// <summary>
+    /// This is the actualised ID for the LLM model used, based on the ModelProfile specified.
+    /// </summary>
+    public string ModelID = string.Empty;
 
     #endregion
 
@@ -178,10 +212,25 @@ public class TCOperation : IDebugInfo {
 
         // TODO: Error handling and automatic retry
 
-        ResponseCompleted = DateTime.UtcNow;
+        ResponseReceived = DateTime.UtcNow;
+
+        // If we have not been given any usage info, we calculate it here
+        if(RequestTokenCount == 0 && ResponseTokenCount == 0 && !string.IsNullOrEmpty(ModelID)) {
+            // Get the encoding for the model
+            TikToken tikToken = TikToken.EncodingForModel(ModelID);
+
+            // Use Tiktoken to count the tokens
+            RequestTokenCount = tikToken.Encode(LastGeneratedInputJSON).Count;
+            ResponseTokenCount = tikToken.Encode(FinalResponse).Count;
+        }
+
         OnResponseComplete?.Invoke(this);
     }
 
+    /// <summary>
+    /// This function will return a boolean value indicating whether the final response is valid.
+    /// To be considered valid the final response must be populated and there must be no error messages.
+    /// </summary>
     public bool ValidateResponse() {
         return FinalResponse.Length > 0 && ErrorMessage.Length == 0;
     }
@@ -190,35 +239,46 @@ public class TCOperation : IDebugInfo {
 
     #region METADATA
 
-    public DateTime RequestStarted;
-    public DateTime RequestCompleted;
-    public DateTime ResponseStarted;
-    public DateTime ResponseCompleted;
+    public int RequestTokenCount;
+    public int ResponseTokenCount;
 
-    public TimeSpan RequestDuration => RequestCompleted - RequestStarted;
-    public TimeSpan WaitDuration => ResponseStarted - RequestCompleted;
-    public TimeSpan ResponseDuration => ResponseCompleted - ResponseStarted;
-    public TimeSpan TotalDuration => ResponseCompleted - RequestStarted;
+    public DateTime RequestStarted;
+    public DateTime RequestSent;
+    public DateTime ResponseStarted;
+    public DateTime ResponseReceived;
+
+    public TimeSpan RequestDuration => RequestSent - RequestStarted;
+    public TimeSpan WaitDuration => ResponseStarted - RequestSent;
+    public TimeSpan ResponseDuration => ResponseReceived - ResponseStarted;
+    public TimeSpan TotalDuration => ResponseReceived - RequestStarted;
 
     #endregion
 
     /// <summary>
-    /// Returns all avalible information regarding this class in a user friendly ordering and format.
+    /// Returns all avalible information regarding this class in a human readable ordering and format.
     /// </summary>
     public void GetDebugInfo(StringBuilder sb, string prefix = "") {
         sb.AppendLine($"{prefix}Text-Completion Operation [{OperationID}]");
 
         sb.AppendLine($"{prefix}*Metadata*");
-        sb.AppendLine(prefix + $"\tRequest Started: {RequestStarted}");
-        sb.AppendLine(prefix + $"\tRequest Completed: {RequestCompleted}");
-        
-        sb.AppendLine(prefix + $"\tResponse Started: {ResponseStarted}");
-        sb.AppendLine(prefix + $"\tResponse Completed: {ResponseCompleted}");
+        sb.AppendLine($"{prefix}\tRequestTokenCount [{RequestTokenCount}]");
+        sb.AppendLine($"{prefix}\tResponseTokenCount [{ResponseTokenCount}]");
+        sb.AppendLine($"{prefix}\tTotal Tokens [{RequestTokenCount + ResponseTokenCount}]");
 
-        sb.AppendLine(prefix + $"\tRequest Duration: {RequestDuration}");
-        sb.AppendLine(prefix + $"\tWait Duration: {WaitDuration}");
-        sb.AppendLine(prefix + $"\tResponse Duration: {ResponseDuration}");
-        sb.AppendLine(prefix + $"\tTotal Duration: {TotalDuration}");
+        sb.AppendLine($"{prefix}\tRequest Started: {RequestStarted}");
+        sb.AppendLine($"{prefix}\tRequest Sent: {RequestSent}");
+        
+        sb.AppendLine($"{prefix}\tResponse Started: {ResponseStarted}");
+        sb.AppendLine($"{prefix}\tResponse Received: {ResponseReceived}");
+
+        sb.AppendLine($"{prefix}\tRequest Duration: {RequestDuration.GetPrettyPrint()}");
+        sb.AppendLine($"{prefix}\tWait Duration: {WaitDuration.GetPrettyPrint()}");
+        sb.AppendLine($"{prefix}\tResponse Duration: {ResponseDuration.GetPrettyPrint()}");
+        sb.AppendLine($"{prefix}\tTotal Duration: {TotalDuration.GetPrettyPrint()}");
+
+        sb.AppendLine($"{prefix}*Config*");
+        ModelProfile.GetDebugInfo(sb, $"{prefix}\t");
+        sb.AppendLine($"{prefix}\tModelID [{ModelID}]");
 
         sb.AppendLine($"{prefix}*Inputs*");
         sb.AppendLine($"{prefix}\tRole [{Role}]");
@@ -240,7 +300,12 @@ public class TCOperation : IDebugInfo {
         sb.AppendLine($"{prefix}\tFinal Response [{FinalResponse}]");
         sb.AppendLine($"{prefix}\tError Message [{ErrorMessage}]");
         sb.AppendLine($"{prefix}\tFull Response Log:");
-        sb.AppendLine($"{prefix}\t\t[{ResponseLog}]");
-
+        string[] logLines = ResponseLog.ToString().Split(new char[] { '\n', '\r'});
+        foreach(string logLine in logLines) {
+            if(string.IsNullOrEmpty(logLine)) {
+                continue;
+            }
+            sb.AppendLine($"{prefix}\t\t{logLine.Trim()}");
+        }
     }
 }

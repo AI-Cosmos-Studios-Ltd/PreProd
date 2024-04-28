@@ -1,4 +1,5 @@
 using Claudia;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -8,11 +9,16 @@ using System.Threading;
 /// </summary>
 public class AnthropicRequest {
 
+    public Action<AnthropicRequest> OnFinish;
+
     public string ErrorMessage { get; private set; }
+
+    public bool RequestInProgress { get; private set; }
 
     private TCOperation linkedOperation;
 
     private List<IMessageStreamEvent> rawResponse = new List<IMessageStreamEvent>();
+    // Cached in case we need to retry the request
     private CancellationToken lastUsedCancelToken;
 
     public AnthropicRequest(TCOperation textCompletionOperation) {
@@ -50,7 +56,7 @@ public class AnthropicRequest {
 
         // Create MessageRequest from linkedOperation
         MessageRequest tcRequest = new MessageRequest() {
-            Model = "claude-3-opus-20240229",
+            Model = linkedOperation.ModelID,
             MaxTokens = 1024,
             System = systemString.ToString(),
             Messages = messages.ToArray()
@@ -61,11 +67,12 @@ public class AnthropicRequest {
 
     private async void PerformRequestAsync(Anthropic anthropicAPI, MessageRequest tcRequest, CancellationToken cancelToken) {
         lastUsedCancelToken = cancelToken;
+        RequestInProgress = true;
 
         try {
             IAsyncEnumerable<IMessageStreamEvent> stream = anthropicAPI.Messages.CreateStreamAsync(tcRequest, cancellationToken:cancelToken);
-
-            linkedOperation.RequestIsComplete();
+            
+            linkedOperation.RequestWasSent();
 
             await foreach(var messageStreamEvent in stream) {
                 ProcessMessageStreamEvent(messageStreamEvent);
@@ -119,5 +126,9 @@ public class AnthropicRequest {
         else {
             linkedOperation.SetFinalResponse(linkedOperation.ResponseStream.ToString());
         }
+
+        RequestInProgress = false;
+        
+        OnFinish?.Invoke(this);
     }
 }

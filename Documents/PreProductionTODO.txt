@@ -1,0 +1,24 @@
+
+1. Integrate Open AI *DONE*
+
+2. Set up data structure for holding TCXML (in isolated C# lib)
+
+3. Set up importing and exporting TCXML from file to data.
+	- Add JSON import/export option
+	
+4. Create code to execute a TCXML
+	
+5. Test run a TCXML
+
+6. Integrate local LLM
+
+7. Integrate tools (e.g image generation)
+
+8. Figure out how to make C# lib for running TCXML run on AWS
+
+9. Make scheduled job in AWS to run daily.
+
+10. Make AWS job automatically add to test website
+
+11. Create automated AI comic strip website
+
