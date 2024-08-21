@@ -26,7 +26,6 @@ public class TCProviderManager : MonoSingleton<TCProviderManager>, IDebugInfo {
         // Add Anthropic provider
         AddProvider(new AnthropicProvider());
 #endif
-        PerformTest();
     }
 
     private void PerformTest() {

@@ -22,3 +22,12 @@
 
 11. Create automated AI comic strip website
 
+
+Stretch Goals:
+
+- Redefine operations 
+	- Make TC / new TCXML determination clearer.
+	- Make them able to reference existing TCXMLs
+
+- Create a switch in TCXML (inc. GOTO)
+	- Switch logic could be another TCXML

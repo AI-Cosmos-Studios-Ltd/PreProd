@@ -1,0 +1,73 @@
+I have come up with an innovative new framework for creating large-scale LLM AI projects. For a prototype of the framework I created a new XML format for expressing the framework called "Task Completion eXtensible Markup Language" or TCXML.
+
+In previous conversations with gpt4 I have had it create the following summary for me:
+
+"""**Summary of the Task Completion eXtensible Markup Language (TCXML):**
+
+
+
+TCXML is a structured markup language designed to facilitate the automated generation of written content by a language model AI, such as GPT-4. It serves as a blueprint for complex writing projects, orchestrating the sequence of tasks and subprojects that the AI undertakes to complete a narrative or other writing assignments.
+
+
+
+**Key Features of TCXML:**
+
+
+
+1. **Project Definition:**
+
+   - The markup language begins with a project definition that includes essential details such as project ID, type, author, and date.
+
+
+
+2. **Parameters:**
+
+   - Parameters are variables that define project-specific elements like character count, setting type, and the number of scenes, which guide the content generation process.
+
+
+
+3. **Iterators:**
+
+   - Iterators allow for the dynamic generation of content, such as multiple scenes, by iterating over a range of values specified within the TCXML.
+
+
+
+4. **Operations:**
+
+   - Operations are central to TCXML, representing separate tasks and/or TCXML subprojects. Each Operation contains a description, inputs, outputs, and is designed to be either executed as a standalone task or expanded into a more complex TCXML subproject during runtime.
+
+
+
+5. **Final Output Definition:**
+
+   - The TCXML specifies the final output of the project, detailing the file path where the completed written content will be stored.
+
+
+
+**Usage of TCXML with LLM AI:**
+
+
+
+TCXML is designed to be parsed by a hybrid execution system that combines traditional programming with LLM AI Text Completion. This system interprets the TCXML, determines the nature of each Operation, and executes the project by generating content and managing the flow according to the TCXML's directives.
+
+
+
+As the hybrid execution system progresses through the Operations, it dynamically invokes a LLM AI Text Completion, either to complete the Operation by using a LLM AI Text Completion to produce the output, or expand upon the Operation by creating a new TCXML, using the Operations description, inputs and outputs.
+
+
+
+When an LLM AI Text Completion is executed when generating content for an Operation, the LLM AI is provided with the inputs from the Operation to understand what content needs to be generated and how it fits into the overall project. 
+
+
+
+**Conclusion:**
+
+
+
+TCXML provides a structured, systematic approach to managing large-scale writing projects, allowing LLM AI to produce coherent and complex narratives by following a predefined project path. It encapsulates the entire writing process in a format that is optimized for AI-driven content generation, ensuring that the resulting output aligns with the initial project vision and requirements."""
+
+
+
+This summary is now out of date and I would like you to help me update it.  Here is one of the pertinent code files from the C# code implementation of the framework which has defined a number of operation types that this implementation supports. This actualised implementation should provide some context to better understand the possibilities of the theoretical framework.
+
+"""
