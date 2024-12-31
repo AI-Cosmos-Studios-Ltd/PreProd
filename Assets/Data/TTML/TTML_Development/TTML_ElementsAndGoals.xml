@@ -1,0 +1,80 @@
+<TTML version="0.1.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd" >
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+    
+	<!-- Task Definition -->
+    <Task id="BroadConceptualDevelopment" genre="Technical" author="gpt-4o" date="2023-12-03" desc="Analyze the original prompt to extract key elements and goals."/>
+
+    <!-- Inputs -->
+    <Inputs>
+        <File id="original_prompt" folder="/inputs" extension="txt"/>
+    </Inputs>
+
+    <!-- Operations -->
+    <Operations>
+
+		<!-- Here we consider the prompt from different perspectives, then use those perspectives to inform our definition of the task goals. -->
+
+        <!-- Theme Extraction -->
+        <Operation id="ThemeExtraction" type="TextCompletion" desc="Extract key themes and topics from the original prompt.">
+            <Input>
+				<FileRef id="original_prompt"/>
+            </Input>
+			<Output>
+                <File id="themes_and_topics" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Requirement Identification -->
+        <Operation id="RequirementIdentification" type="TextCompletion" desc="Identify specific requirements and constraints.">
+            <Input>
+				<FileRef id="original_prompt"/>
+            </Input>
+			<Output>
+                <File id="requirements_and_constraints" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Component Isolation -->
+        <Operation id="ComponentIsolation" type="TextCompletion" desc="Determine core components and structures needed.">
+            <Input>
+				<FileRef id="original_prompt"/>
+            </Input>
+			<Output>
+                <File id="core_components" extension="txt"/>
+            </Output>
+        </Operation>
+
+		<!-- Combine Key Element Outputs -->
+        <Operation id="CompileKeyElements" type="ExecuteFunction" desc="CombineFiles">
+            <Input>
+				<FileRef id="themes_and_topics"/>
+				<FileRef id="requirements_and_constraints"/>
+				<FileRef id="core_components"/>
+            </Input>
+			<Output>
+                <File id="key_elements" extension="txt"/>
+            </Output>
+        </Operation>
+		
+		<!-- Goal Determination -->
+        <Operation id="GoalDetermination" type="TextCompletion" desc="Define the goals and deliverables for the task.">
+            <Input>
+				<FileRef id="original_prompt"/>
+				<FileRef id="key_elements"/>
+            </Input>
+			<Output>
+                <File id="task_goals" extension="txt"/>
+            </Output>
+        </Operation>
+		
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="key_elements"/>
+        <FileRef id="task_goals"/>
+    </Output>
+</TTML>

@@ -86,3 +86,7 @@ crashlytics-build.properties
 /[Aa]ssets/Resources/AnthropicConfiguration.asset
 /[Aa]ssets/Resources/AnthropicConfiguration.asset.meta
 
+Assets/Scripts/Editor/ThoughtTreeAIEditorMenu.cs
+Assets/Scripts/Editor/ThoughtTreeAIEditorMenu.cs.meta
+Assets/Scripts/Editor/AICosmosEditorForm.cs
+Assets/Scripts/Editor/AICosmosEditorForm.cs.meta

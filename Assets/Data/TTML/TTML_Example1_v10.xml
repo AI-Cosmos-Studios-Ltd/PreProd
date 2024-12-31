@@ -1,0 +1,109 @@
+<TTML version="0.11.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd" >
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+
+    <!-- Task Definition -->
+    <Task id="FictionProject" genre="Novel" author="Robert Bateman" date="2023-12-03" desc="Develop a novel with a compelling narrative arc."/>
+
+    <!-- Task Variables -->
+    <Vars>
+        <Var name="CharacterCount" type="integer" value="4"/>
+        <Var name="SettingType" type="string" value="Mystery"/>
+        <Var name="ChapterCount" type="integer" value="12"/>
+        <Var name="PersonaCount" type="integer" value="3"/>
+        <!-- Additional variables as necessary -->
+    </Vars>
+
+	<!-- Task Iterators -->
+    <Iterators>
+        <Iterator id="ChapterIterator" from="1" to="{{ChapterCount}}"/>
+		<Iterator id="CharacterIterator" from="1" to="{{CharacterCount}}"/>
+		<Iterator id="PersonaIterator" from="1" to="{{PersonaCount}}"/>
+        <!-- Additional iterators as necessary -->
+    </Iterators>
+	
+	<!-- Inputs -->
+    <Input>
+        <File id="story_requirements" folder="/requirements" extension="txt"/>
+        <!-- Additional inputs as necessary -->
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        <!-- Enhanced Concept Development -->
+        <Operation id="ConceptDevelopment" type="TaskCompletion" desc="Develop detailed concepts for characters, setting, and plot outline.">
+            <Input>
+				<FileRef id="story_requirements"/>
+			</Input>
+            <Output>
+                <File id="character_{{CharacterIterator}}_profile" extension="txt"/>
+                <File id="setting_overview" extension="txt"/>
+                <File id="plot_outline" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Operation for drafting chapters -->
+        <Operation id="DraftChapter" type="TextCompletion" desc="Generate draft for the chapter based on developed concepts.">
+            <Input>
+				<FileRef id="character_{{CharacterIterator}}_profile"/>
+				<FileRef id="setting_overview"/>
+				<FileRef id="plot_outline"/>
+			</Input>
+            <Output>
+                <File id="draft_chapter_{{ChapterIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+		<!-- Create Beta Reader Personas -->
+        <Operation id="CreateBetaReaders" type="TextCompletion" desc="Create different beta reader personas suitable for the intended audience.">
+            <Input>
+				<FileRef id="setting_overview"/>
+				<FileRef id="plot_outline"/>
+			</Input>
+            <Output>
+                <File id="beta_reader_persona_{{PersonaIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Simulated Feedback using LLM AI -->
+        <Operation id="SimulateFeedback" type="TaskCompletion" desc="Simulate feedback from different reader personas.">
+            <Input>
+				<FileRef id="draft_chapter_{{ChapterIterator}}"/>
+				<FileRef id="beta_reader_persona_{{PersonaIterator}}"/>
+			</Input>
+            <Output>
+                <File id="feedback_chapter_{{ChapterIterator}}_persona_{{PersonaIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Operation for revising chapters based on feedback -->
+        <Operation id="ReviseChapter" type="TextCompletion" desc="Revise and polish chapter drafts with incorporated feedback.">
+            <Input>
+				<FileRef id="draft_chapter_{{ChapterIterator}}"/>
+				<FileRef id="feedback_chapter_{{ChapterIterator}}_persona_{{PersonaIterator}}"/>
+			</Input>
+            <Output>
+                <File id="revised_chapter_{{ChapterIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Function invocation for compilation -->
+        <Operation id="CompileNovel" type="ExecuteFunction" desc="CombineFilesWithEdits">
+            <Input>
+				<FileRef id="revised_chapter_{{ChapterIterator}}"/>
+			</Input>
+            <Output>
+                <File id="final_edited_novel" extension="txt"/>
+            </Output>
+        </Operation>
+        
+        <!-- Additional operations as necessary -->
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="final_edited_novel"/>
+    </Output>
+</TTML>

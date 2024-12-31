@@ -1,4 +1,3 @@
-#define OPEN_AI_ENABLED
 //#define ANTHROPIC_ENABLED
 using System.Collections.Generic;
 using System.Text;

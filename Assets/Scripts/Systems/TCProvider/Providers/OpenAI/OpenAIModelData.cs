@@ -1,5 +1,32 @@
 public class OpenAIModelData {
 
+    public static readonly OpenAIModelData GPT4o1_PREVIEW = new OpenAIModelData() {
+        ModelId = "o1-preview-2024-09-12",
+        ContextSize = 128000,
+        InputCostPerMillionTokens = 15f,
+        OutputCostPerMillionTokens = 60.0f,
+        MaxTokensPerMin = 300000,
+        MaxRequestsPerMin = 10000
+    };
+
+    public static readonly OpenAIModelData GPT4o = new OpenAIModelData() {
+        ModelId = "gpt-4o-2024-11-20",
+        ContextSize = 8000,
+        InputCostPerMillionTokens = 2.5f,
+        OutputCostPerMillionTokens = 10.0f,
+        MaxTokensPerMin = 300000,
+        MaxRequestsPerMin = 10000
+    };
+
+    public static readonly OpenAIModelData GPT4o_MINI = new OpenAIModelData() {
+        ModelId = "gpt-4o-mini-2024-07-18",
+        ContextSize = 8000,
+        InputCostPerMillionTokens = 0.15f,
+        OutputCostPerMillionTokens = 0.60f,
+        MaxTokensPerMin = 300000,
+        MaxRequestsPerMin = 10000
+    };
+
     public static readonly OpenAIModelData GPT4_TURBO = new OpenAIModelData() {
         ModelId = "gpt-4-turbo-2024-04-09",
         ContextSize = 128000,
@@ -18,6 +45,7 @@ public class OpenAIModelData {
         MaxTokensPerMin = 300000,
         MaxRequestsPerMin = 10000
     };
+
 
     public static readonly OpenAIModelData GPT3_TURBO_16K = new OpenAIModelData() {
         ModelId = "gpt-3.5-turbo-16k-0613",

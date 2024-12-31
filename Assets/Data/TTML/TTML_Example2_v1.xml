@@ -1,0 +1,79 @@
+<TCXML version="0.10.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd" >
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+
+    <!-- Task Definition -->
+    <Task id="BlogSeriesProject" genre="Non-Fiction" author="gpt-4o" date="2023-12-03" desc="Create a series of informative blog articles on technology trends."/>
+
+    <!-- Task Variables -->
+    <Vars>
+        <Var name="ArticleCount" type="integer" value="5"/>
+        <!-- Additional variables as necessary -->
+    </Vars>
+
+	<!-- Task Iterators -->
+    <Iterators>
+		<Iterator id="ArticleIterator" from="1" to="{{ArticleCount}}"/>
+    </Iterators>
+
+    <!-- Inputs -->
+    <Input>
+        <File id="topic_list" folder="/inputs" extension="txt"/>
+        <File id="reference_materials" folder="/inputs" extension="pdf"/>
+        <!-- Additional inputs as necessary -->
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        <!-- Operation for outlining articles -->
+        <Operation id="OutlineArticles" type="TextCompletion" desc="Generate outlines for each article based on topics and reference materials.">
+            <Input>
+				<FileRef id="topic_list"/>
+				<FileRef id="reference_materials"/>
+			</Input>
+            <Output>
+                <File id="article_{{ArticleIterator}}_outline" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Operation for drafting articles -->
+        <Operation id="DraftArticles" type="TextCompletion" desc="Draft articles based on outlines and additional references.">
+            <Input>
+				<FileRef id="article_{{ArticleIterator}}_outline"/>
+				<FileRef id="reference_materials"/>
+			</Input>
+            <Output>
+                <File id="article_{{ArticleIterator}}_draft" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Operation for reviewing articles -->
+        <Operation id="ReviewArticles" type="TextCompletion" desc="Review and finalize articles for publication.">
+            <Input>
+				<FileRef id="article_{{ArticleIterator}}_draft"/>
+			</Input>
+            <Output>
+                <File id="article_{{ArticleIterator}}_final" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Function invocation for compiling articles into a series -->
+        <Operation id="CompileSeries" type="ExecuteFunction" desc="CombineFiles">
+            <Input>
+				<FileRef id="article_{{ArticleIterator}}_final"/>
+			</Input>
+            <Output>
+                <File id="final_blog_series" extension="pdf"/>
+            </Output>
+        </Operation>
+        
+        <!-- Additional operations as necessary -->
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="final_blog_series"/>
+    </Output>
+</TCXML>

@@ -159,20 +159,23 @@ public class TCOperation : IDebugInfo {
     /// </summary>
     public TCModelProfile ModelProfile = new TCModelProfile();
 
-    /// <summary>
-    /// This is the actualised ID for the LLM model used, based on the ModelProfile specified.
-    /// </summary>
-    public string ModelID = string.Empty;
-
     #endregion
 
     #region OUTPUTS
 
+    /// <summary>
+    /// This is the actualised ID for the LLM model used, based on the ModelProfile specified.
+    /// </summary>
+    public string ModelID { get; private set; }
     public string FinalResponse { get; private set; }
     public string ErrorMessage { get; private set; }
 
     public StringBuilder ResponseStream = new StringBuilder();
     public StringBuilder ResponseLog = new StringBuilder();
+
+    public void SetLLMModelUsed(string modelId) {
+        ModelID = modelId;
+    }
 
     public void ClearResponse() {
         FinalResponse = string.Empty;

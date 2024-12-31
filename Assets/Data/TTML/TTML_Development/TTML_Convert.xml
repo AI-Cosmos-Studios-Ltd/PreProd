@@ -1,0 +1,86 @@
+<TTML version="0.1.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd" >
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+
+	<!-- Task Definition -->
+    <Task id="TTMLGenerator" genre="Technical" author="Robert Bateman" date="2023-12-03" desc="Converting a TaskCompletion Operation into an executable TTML."/>
+
+    <!-- Inputs -->
+    <Input>
+		<File id="TTML_Schema" folder="/inputs" extension="txt"/>
+		<File id="function_definitions" folder="/inputs" extension="txt"/>
+        <File id="original_operation" folder="/inputs" extension="txt"/>
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        <!-- Broad Conceptual Development -->
+        <Operation id="BroadConceptualDevelopment" type="TextCompletion" desc="Analyze the original prompt to extract key elements and goals.">
+            <Input>
+				<FileRef id="original_operation"/>
+			</Input>
+            <Output>
+                <File id="key_elements" extension="txt"/>
+                <File id="task_goals" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Options and Needs Analysis -->
+        <Operation id="PerspectiveAnalysis" type="TextCompletion" desc="Consider different options and needs in developing TTML.">
+            <Input>
+				<FileRef id="original_operation"/>
+				<FileRef id="key_elements"/>
+				<FileRef id="TTML_Schema"/>
+				<FileRef id="function_definitions"/>
+			</Input>
+            <Output>
+                <File id="structural_needs" extension="txt"/>
+				<File id="options_analysis" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Intermediate TTML Structuring -->
+        <Operation id="IntermediateStructuring" type="TextCompletion" desc="Draft a natural language description of the TTML structure with identified elements and iterators.">
+            <Input>
+				<FileRef id="task_goals"/>
+				<FileRef id="structural_needs"/>
+			</Input>
+            <Output>
+                <File id="ttml_structure_description" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Detailed TTML Drafting -->
+        <Operation id="DetailedTTMLDrafting" type="TextCompletion" desc="Convert the intermediate structure into a detailed TTML draft.">
+            <Input>
+				<FileRef id="ttml_structure_description"/>
+				<FileRef id="key_elements"/>
+				<FileRef id="options_analysis"/>
+				<FileRef id="TTML_Schema"/>
+				<FileRef id="function_definitions"/>
+			</Input>
+            <Output>
+                <File id="detailed_ttml_draft" extension="ttml"/>
+            </Output>
+        </Operation>
+
+        <!-- Final TTML Review and Improvement -->
+        <Operation id="FinalReviewAndImprovement" type="TextCompletion" desc="Finalize the TTML by reviewing how well the detailed draft fulfils the original operation.">
+            <Input>
+				<FileRef id="original_operation"/>
+				<FileRef id="detailed_ttml_draft"/>
+			</Input>
+            <Output>
+                <File id="NewTTML" extension="ttml"/>
+            </Output>
+        </Operation>
+        
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="NewTTML"/>
+    </Output>
+</TTML>

@@ -1,0 +1,104 @@
+<TTML version="0.3.0"
+      xmlns:xsi="https://www.thoughttree.ai"
+      xsi:noNamespaceSchemaLocation="TTMLSchema.xsd">
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+    
+    <!-- Task Definition -->
+    <Task id="TTMLImprovementProcess" genre="Analysis" author="Robert Bateman" date="2023-12-03" desc="Test and propose improvements for the provided TTML related to a ProjectCompletion operation."/>
+
+    <!-- Task Variables -->
+    <Vars>
+		<Var name="NumInputFiles" type="integer" value="3"/>
+		<Var name="NumOutputFiles" type="integer" value="3"/>
+        <Var name="NumTests" type="integer" value="5"/>
+    </Vars>
+
+    <!-- Task Iterators -->
+    <Iterators>
+		<Iterator id="InputFileIterator" from="1" to="{{NumInputFiles}}"/>
+		<Iterator id="OutputFileIterator" from="1" to="{{NumOutputFiles}}"/>
+        <Iterator id="TestIterator" from="1" to="{{NumTests}}"/>
+    </Iterators>
+
+    <!-- Inputs -->
+    <Input>
+        <File id="project_completion" folder="/inputs" extension="txt"/>
+        <File id="original_ttml" folder="/inputs" extension="xml"/>
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        
+        <!-- 1. Generate Test Input Data Sets -->
+        <Operation id="GenerateTestInputs" type="TextCompletion" desc="Create test input data sets suitable for the ProjectCompletion operation.">
+            <Input>
+				<FileRef id="project_completion"/>
+			</Input>
+			<Output>
+                <File id="test_input_{{TestIterator}}_{{InputFileIterator}}" extension="xml"/>
+            </Output>
+        </Operation>
+
+        <!-- 2. Execute TTML for Each Test -->
+        <Operation id="ExecuteTest" type="PreExisting" desc="original_ttml.xml">
+            <Input>
+				<FileRef id="test_input_{{TestIterator}}_{{InputFileIterator}}"/>
+			</Input>
+            <Output>
+                <File id="test_output_{{TestIterator}}_{{OutputFileIterator}}" folder="/outputs" />
+            </Output>
+        </Operation>
+
+        <!-- 3. Review Each Test Output -->
+        <Operation id="TTMLReviewProcess" type="ProjectCompletion" desc="Review and rate the provided TTML file and its outputs against the ProjectCompletion operation requirements.">
+            <Input>
+				<FileRef id="project_completion" />
+				<FileRef id="original_ttml" />
+				<FileRef id="test_output_{{TestIterator}}_{{OutputFileIterator}}" />
+			</Input>
+            <Output>
+                <File id="test_review_{{TestIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- 4. Suggest Improvements -->
+        <Operation id="SuggestImprovements" type="TextCompletion" desc="Iterate over the test reviews and produce suggested improvements for the provided TTML.">
+            <Input>
+				<FileRef id="project_completion"/>
+				<FileRef id="original_ttml" />
+				<FileRef id="test_review_{{TestIterator}}"/>
+			</Input>
+            <Output>
+                <File id="suggestions_{{TestIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- 5. Compile Revision Strategy -->
+        <Operation id="CompileStrategy" type="TextCompletion" desc="Compile the improvement suggestions into a revision strategy.">
+            <Input>
+				<FileRef id="suggestions_{{TestIterator}}"/>
+			</Input>
+            <Output>
+                <File id="revision_strategy" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- 6. Create Improved TTML -->
+        <Operation id="CreateImprovement" type="TextCompletion" desc="Create an improved version of the provided TTML incorporating suggestions.">
+            <Input>
+				<FileRef id="project_completion"/>
+				<FileRef id="original_ttml"/>
+				<FileRef id="revision_strategy"/>
+			</Input>
+            <Output>
+                <File id="improved_ttml" extension="xml"/>
+            </Output>
+        </Operation>
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="improved_ttml"/>
+    </Output>
+</TTML>

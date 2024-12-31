@@ -57,7 +57,8 @@ public class TextUtils {
         return sb.ToString();
     }
 
-    
+
+#if OPEN_AI_ENABLED
     public static string GenerateDebugString(ChatResponse result) {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine($"OpenAI.Chat.ChatResponse ID [{result.Id}]");
@@ -103,6 +104,7 @@ public class TextUtils {
         }
         Debug.Log(sb.ToString());
     }
+#endif
 
     public static void LogChat(List<Message> messages) {
         StringBuilder sb = new StringBuilder();

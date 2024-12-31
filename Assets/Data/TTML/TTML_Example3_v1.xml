@@ -1,0 +1,65 @@
+<TTML version="0.1.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd" >
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+
+    <!-- Task Definition -->
+    <Task id="ConceptDevelopment" genre="Novel" author="Robert Bateman" date="2023-12-03" desc="Develop detailed concepts for characters, setting, and plot outline."/>
+
+    <!-- Task Variables -->
+    <Vars>
+        <Var name="CharacterCount" type="integer" value="4"/>
+    </Vars>
+
+	<!-- Task Iterators -->
+    <Iterators>
+		<Iterator id="CharacterIterator" from="1" to="{{CharacterCount}}"/>
+    </Iterators>
+	
+	<!-- Inputs -->
+    <Input>
+        <File id="story_requirements" folder="/requirements" extension="txt"/>
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        <!-- Generate Character Profiles -->
+        <Operation id="GenerateCharacterProfiles" type="TextCompletion" desc="Generate character profiles based on requirements.">
+            <Input>
+				<FileRef id="story_requirements"/>
+			</Input>
+            <Output>
+                <File id="character_{{CharacterIterator}}_profile" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Develop Setting Overview -->
+        <Operation id="DevelopSettingOverview" type="TextCompletion" desc="Create a detailed overview of the setting.">
+            <Input>
+				<FileRef id="story_requirements"/>
+			</Input>
+            <Output>
+                <File id="setting_overview" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- Generate Plot Outline -->
+        <Operation id="GeneratePlotOutline" type="TextCompletion" desc="Draft a basic plot outline.">
+            <Input>
+				<FileRef id="story_requirements"/>
+			</Input>
+            <Output>
+                <File id="plot_outline" extension="txt"/>
+            </Output>
+        </Operation>
+        
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="character_{{CharacterIterator}}_profile"/>
+        <FileRef id="setting_overview"/>
+        <FileRef id="plot_outline"/>
+    </Output>
+</TTML>

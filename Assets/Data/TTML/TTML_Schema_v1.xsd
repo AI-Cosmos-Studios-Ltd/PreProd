@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+	<!-- VarOrConst Type: Can reference a Variable Element or a constant value. -->
+	<xs:simpleType name="VarOrConst">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\{\{[A-Za-z_][A-Za-z0-9_]*\}\}|\d+"/> <!-- Matches {{id}} or digits -->
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- OperationType: An enum to define a kind of operation.  -->
+    <xs:simpleType name="OperationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DynamicCompletion"/> <!-- Uses an LLM AI to decide whether to complete the operation as a text completion or a TTML subproject. -->
+			<xs:enumeration value="ProjectCompletion"/> <!-- Expands the operation into a new TTML subproject. -->
+			<xs:enumeration value="TextCompletion"/> <!-- Completes the operation as a single text completion task. -->
+            <xs:enumeration value="PreExisting"/> <!-- Completes the operation using a pre-defined TTML subproject. The file path is passed in desc. -->
+            <xs:enumeration value="ExecuteFunction"/> <!-- Invokes a pre-defined function that doesn’t require LLM AI involvement. The function name is passed in desc. -->
+			<!--WIP <xs:enumeration value="LogicGate"/> Defines decision-making logic that determines the next operation based on specified conditions. -->
+			
+			<!-- Additional operations will be added as needed -->
+        </xs:restriction>
+    </xs:simpleType>
+	
+    <!-- Project Element: Metadata about the TTML -->
+    <xs:element name="Project">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+			<xs:attribute name="desc" type="xs:string" use="required"/>
+            <xs:attribute name="genre" type="xs:string"/>
+            <xs:attribute name="author" type="xs:string"/>
+            <xs:attribute name="date" type="xs:date"/>
+			
+			<!-- Additional metadata will be added as needed -->
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- File Element: A reference to a file in the project workspace. -->
+    <xs:element name="File">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="folder" type="xs:string"/>
+            <xs:attribute name="extension" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+	<!-- FileRef Element: A short reference to a File Element that has been previously defined. -->
+    <xs:element name="FileRef">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+	
+    <!-- Variable Element: A flexible container for a tracked or referenced value. -->
+    <xs:element name="Var">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Iterator Element: A list of avalible iterators. Referencing an iterator in a File or -->
+	<!-- FileRef Element will cause the operation to repeat once for each value. Supports multiple. -->
+    <xs:element name="Iterator">
+        <xs:complexType>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="from" type="VarOrConst" use="required"/>
+            <xs:attribute name="to" type="VarOrConst" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Operation Element: A process to execute that has inputs, variables and outputs. -->
+    <xs:element name="Operation">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="FileRef" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="Output">
+					<xs:sequence>
+					<xs:element ref="File" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="OperationType" use="required"/>
+            <xs:attribute name="desc" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Root Element: The Thought Tree Markup Language (TTML) is a modular framework designed -->
+	<!-- to facilitate the creation and execution of large-scale projects using LLM AI. -->
+    <xs:element name="TTML">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Project"/>
+                <xs:element name="Inputs">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="File" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Vars">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Var" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+				<xs:element name="Iterators">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Iterator" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Operations" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="Operation" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Output" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="FileRef" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>

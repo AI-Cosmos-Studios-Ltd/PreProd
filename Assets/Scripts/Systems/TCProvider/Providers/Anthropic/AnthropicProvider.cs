@@ -47,7 +47,7 @@ public class AnthropicProvider : ITCProvider {
 
         // Check we have a model ID, if not get one.
         if(string.IsNullOrEmpty(operation.ModelID)) {
-            operation.ModelID = GetModelIdFromProfile(operation.ModelProfile);
+            operation.SetLLMModelUsed(GetModelIdFromProfile(operation.ModelProfile));
         }
 
         if(operation.ModelID == string.Empty) {

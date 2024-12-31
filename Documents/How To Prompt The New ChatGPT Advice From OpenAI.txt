@@ -1,0 +1,42 @@
+How To Prompt The New ChatGPT: Advice From OpenAI
+Jodie Cook
+Senior Contributor
+Jodie Cook covers ChatGPT prompts & AI for coaches and entrepreneurs.
+
+How to prompt the new ChatGPT: advice from OpenAI 
+
+OpenAI's latest ChatGPT model, OpenAI o1, is a reasoning powerhouse. This new version doesn't just spit out answers. It pauses, ponders, and reflects before responding. It's like chatting with a thoughtful friend who carefully considers their words.
+
+According to OpenAI, this internal reasoning process leads to more considered responses. For founders and entrepreneurs using AI in their businesses, ChatGPT o1 is a game-changer.
+
+How to prompt the new ChatGPT: advice from OpenAI
+Keep prompts simple
+What you learned about writing at school is becoming less relevant. For best results online, formal and complicated is not the way, but casual and clear is. This is the same with the new ChatGPT, that thrives on clarity. Ditch the long-winded instructions and keep it brief.
+
+Instead of "Can you generate a list of 20 potential product names for a new eco-friendly water bottle, considering factors such as environmental impact, target demographic, and current market trends?" try "5 catchy names for an eco water bottle." The model will figure out what you're after and fill in the gaps. Like a human, it'll grasp the context and read between the lines.
+
+Let it think for itself
+When a junior team member joins your company, you teach them to follow your processes. When a senior leader takes the reins, you expect them to have their own. ChatGPT wants to be the senior leader, given free rein on your tasks, using its own methods to find the right response.
+
+This means Chain of Thought (CoT) prompts are out. You don't need to tell it to "think step by step" or "explain your reasoning." ChatGPT is already on it. The new ChatGPT does its own mental gymnastics, and responses might take longer while it's thinking. Just ask the question and let it go.
+
+Split up your instructions
+If you were advising a person, you'd take pauses when speaking. You'd separate email instructions with paragraph sections and line breaks. It's similar here.
+
+The new ChatGPT wants you to use delimiters. These include triple quotes, XML tags, or simple section titles - they're like signposts for the AI. Using them helps ChatGPT understand which part is which, preventing confusion.
+
+You've got plenty of options for delimiters: Markdown headers, dashes, asterisks, numbered or lettered sections. Split up your prompts, divide your examples, and make sure your instructions aren't muddled.
+
+Don't overload the chat
+Giving a human too much information would cause them to shut down. Your hairdresser doesn't need your life story, just how you want your hair. Your accountant doesn't need every detail of your career, just what's relevant for your accounts today. Apply similar thinking here.
+
+RAG, or retrieval-augmented generation, is when you feed extra info to ChatGPT. But with the new model, less is more.
+
+OpenAI warns that overloading ChatGPT with data might lead to overthinking and slower responses. Where you once might have thrown pages of examples at a simple task, now you should only include the most relevant bits.
+
+How to prompt new ChatGPT for best results
+These changes mean rethinking how you use ChatGPT. It's not about crafting the perfect, lengthy prompt anymore. It's about asking concise, targeted questions. Adapting your prompting style will lead to faster, more accurate responses.
+
+OpenAI emphasizes that the key to success with o1 is trusting the model's ability to understand context and generate relevant responses without excessive guidance.
+
+When the technology is moving this fast, you have to keep learning. Make the most of the new ChatGPT with these four simple steps.

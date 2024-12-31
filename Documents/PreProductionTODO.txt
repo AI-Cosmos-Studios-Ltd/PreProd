@@ -1,7 +1,29 @@
 
+Research:
+
+- Review and rating for TTML & output
+	- Dynamic scale
+	- 10x rating 0 - 10 = score out of 100
+- A / B testing
+	- Suitable to a variety of tasks (comparing two sets of output with different LLM params)
+	- Use "Review and rating" to determine the better option
+- Fully automated TTML change A/B test
+	- A proposed update can be submitted for an automated review process
+- Recursive self-improvement
+	- Combine all of the above
+
+Researcvh Giveaway TODO:
+
+1. Website
+2. PDF
+3. Places to post
+4. Post
+
+The woman <img><|image_1|></img> as the angel <img><|image_2|></img>
+
 1. Integrate Open AI *DONE*
 
-2. Set up data structure for holding TCXML (in isolated C# lib)
+2. Set up data structure for holding TCXML (in isolated C# lib) *DONE*
 
 3. Set up importing and exporting TCXML from file to data.
 	- Add JSON import/export option

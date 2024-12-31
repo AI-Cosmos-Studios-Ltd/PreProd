@@ -53,7 +53,7 @@ public class OpenAIProvider : ITCProvider {
 
         // Check we have a model ID, if not get one.
         if(string.IsNullOrEmpty(operation.ModelID)) {
-            operation.ModelID = GetModelIdFromProfile(operation.ModelProfile);
+            operation.SetLLMModelUsed(GetModelIdFromProfile(operation.ModelProfile));
         }
 
         if(string.IsNullOrEmpty(operation.ModelID)) {
@@ -77,12 +77,12 @@ public class OpenAIProvider : ITCProvider {
 
     public string GetModelIdFromProfile(TCModelProfile profile) {
         // If the desired max tokens is over what GPT3 can handle then we need to use GPT-4
-        if(profile.MinTokenLimit > OpenAIModelData.GPT3_TURBO_16K.ContextSize) {
+        if(profile.Need_MinTokenLimit > OpenAIModelData.GPT3_TURBO_16K.ContextSize) {
             return OpenAIModelData.GPT4_TURBO.ModelId;
         }
 
         // If the sophistication is important then we should use GPT-4
-        if(profile.Sophistication > 0.5f && profile.Sophistication > profile.Cost) {
+        if(profile.Want_Sophistication > 0.5f && profile.Want_Sophistication > profile.Want_Cost) {
             return OpenAIModelData.GPT4_TURBO.ModelId;
         }
 

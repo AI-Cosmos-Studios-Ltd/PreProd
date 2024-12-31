@@ -1,0 +1,68 @@
+<TTML version="0.2.0" 
+xmlns:xsi="https://www.thoughttree.ai"
+xsi:noNamespaceSchemaLocation="TTMLSchema.xsd">
+<!-- This is only an illustrative example of how you could write a TT module, and there are many other possible implimentations. -->
+<!-- As this example is for exploring the TT module concept, it has not been tested for its effectiveness. -->
+
+    <!-- Task Definition -->
+    <Task id="TTMLReviewProcess" genre="Analysis" author="Robert Bateman" date="2023-12-03" desc="Review and rate the provided TTML file and its outputs against the ProjectCompletion operation requirements."/>
+
+    <!-- Task Variables -->
+    <Vars>
+        <Var name="NumOutputFiles" type="integer" value="3"/>
+    </Vars>
+
+    <!-- Task Iterators -->
+    <Iterators>
+        <Iterator id="OutputFileIterator" from="1" to="{{NumOutputFiles}}"/>
+    </Iterators>
+
+    <!-- Inputs -->
+    <Input>
+        <File id="project_completion" folder="/inputs" />
+        <File id="ttml_file" folder="/inputs" extension="xml"/>
+        <File id="output_{{OutputFileIterator}}" folder="/outputs" />
+    </Input>
+
+    <!-- Operations -->
+    <Operations>
+        <!-- 1. Develop Rating System -->
+        <Operation id="DevelopRatingSystem" type="TextCompletion" desc="Identify critical qualitative and quantitative aspects for evaluating output based on the ProjectCompletion operation.">
+            <Input>
+				<FileRef id="project_completion"/>
+			</Input>
+            <Output>
+                <File id="rating_system" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- 2. Evaluate Each Output File -->
+        <Operation id="EvaluateOutputs" type="TextCompletion" desc="Evaluate each output file against the rating system and the original TTML.">
+            <Input>
+				<FileRef id="rating_system"/>
+				<FileRef id="ttml_file"/>
+				<FileRef id="output_{{OutputFileIterator}}"/>
+			</Input>
+            <Output>
+                <File id="output_review_{{OutputFileIterator}}" extension="txt"/>
+            </Output>
+        </Operation>
+
+        <!-- 3. Compile Overall Review -->
+        <Operation id="CompileReview" type="TextCompletion" desc="Compile an overall review of the TTML outputs, including a comprehensive percentage score.">
+            <Input>
+				<FileRef id="rating_system"/>
+				<FileRef id="ttml_file"/>
+				<FileRef id="output_review_{{OutputFileIterator}}"/>
+			</Input>
+            <Output>
+                <File id="overall_review" extension="txt"/>
+            </Output>
+        </Operation>
+    </Operations>
+
+    <!-- Final Output Definition -->
+    <Output>
+        <FileRef id="overall_review"/>
+    </Output>
+</TTML>
